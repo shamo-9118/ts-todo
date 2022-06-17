@@ -1,14 +1,13 @@
 import type { NextPage } from "next";
-import { toUnicode } from "punycode";
 import { useState } from "react";
 
 const Home: NextPage = () => {
-  const [tasks, setTasks] = useState([
-    { key: Math.random(), label: "task1", isDone: false },
-    { key: Math.random(), label: "task2", isDone: false },
-    { key: Math.random(), label: "task3", isDone: false },
-  ]);
+  const [text, setText] = useState();
+  const [tasks, setTasks] = useState([]);
 
+  const input = (e) => {
+    setText(e.target.value);
+  };
   const toggle = (e) => {
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
@@ -19,12 +18,28 @@ const Home: NextPage = () => {
       });
     });
   };
+  const add = () => {
+    setTasks((prevTasks) => {
+      return [...prevTasks, { key: Math.random(), label: text, isDone: false }];
+    });
+    setText("");
+  };
   return (
     <div className=" w-96 mx-auto p-20">
       <h1 className="font-bold text-3xl">TODO LIST</h1>
       <div className="flex gap-x-2">
-        <input className="border border-black" type="text" />
-        <button className="border border-black flex-shrink-0 px-2">追加</button>
+        <input
+          className="border border-black"
+          type="text"
+          onChange={input}
+          value={text}
+        />
+        <button
+          className="border border-black flex-shrink-0 px-2"
+          onClick={add}
+        >
+          追加
+        </button>
       </div>
       <ul className="mt-4 space-y-2">
         {tasks.map((task) => (
