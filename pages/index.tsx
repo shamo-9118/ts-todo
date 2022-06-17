@@ -61,6 +61,7 @@ const Home: NextPage = () => {
   );
 };
 
+//VFCは非推奨になっている。FCを使う。
 const ListItem: FC<{
   task: Task;
   toggle: ChangeEventHandler<HTMLInputElement>;
