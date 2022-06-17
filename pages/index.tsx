@@ -1,9 +1,24 @@
 import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import { toUnicode } from "punycode";
+import { useState } from "react";
 
 const Home: NextPage = () => {
+  const [tasks, setTasks] = useState([
+    { key: Math.random(), label: "task1", isDone: false },
+    { key: Math.random(), label: "task2", isDone: false },
+    { key: Math.random(), label: "task3", isDone: false },
+  ]);
+
+  const toggle = (e) => {
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) => {
+        if (task.key === Number(e.target.value)) {
+          return { ...task, isDone: !task.isDone };
+        }
+        return task;
+      });
+    });
+  };
   return (
     <div className=" w-96 mx-auto p-20">
       <h1 className="font-bold text-3xl">TODO LIST</h1>
@@ -12,24 +27,19 @@ const Home: NextPage = () => {
         <button className="border border-black flex-shrink-0 px-2">追加</button>
       </div>
       <ul className="mt-4 space-y-2">
-        <label className="flex items-center">
-          <li>
-            <input type="checkbox" />
-            <span>task1</span>
+        {tasks.map((task) => (
+          <li key={task.key}>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={task.isDone}
+                value={task.key}
+                onChange={toggle}
+              />
+              <span>{task.label}</span>
+            </label>
           </li>
-        </label>
-        <label className="flex items-center">
-          <li>
-            <input type="checkbox" />
-            <span>task2</span>
-          </li>
-        </label>
-        <label className="flex items-center">
-          <li>
-            <input type="checkbox" />
-            <span>task3</span>
-          </li>
-        </label>
+        ))}
       </ul>
     </div>
   );
