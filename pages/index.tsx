@@ -1,12 +1,14 @@
 import type { NextPage } from "next";
-import { ChangeEventHandler, MouseEventHandler, useState } from "react";
+import { FC } from "react";
+import { ChangeEventHandler, MouseEventHandler, useState, VFC } from "react";
+
+type Task = {
+  key: number;
+  label: string;
+  isDone: boolean;
+};
 
 const Home: NextPage = () => {
-  type Task = {
-    key: number;
-    label: string;
-    isDone: boolean;
-  };
   //関数に型をつけるのはgenericsが有効
   const [text, setText] = useState(""); //初期値を入れてやることで型推論が有効になって定義しなくても型をつけてくれる。
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -15,7 +17,7 @@ const Home: NextPage = () => {
   const input: ChangeEventHandler<HTMLInputElement> = (e) => {
     setText(e.target.value);
   };
-  const toggle:ChangeEventHandler<HTMLInputElement> = (e) => {
+  const toggle: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
         if (task.key === Number(e.target.value)) {
@@ -51,19 +53,28 @@ const Home: NextPage = () => {
       <ul className="mt-4 space-y-2">
         {tasks.map((task) => (
           <li key={task.key}>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={task.isDone}
-                value={task.key}
-                onChange={toggle}
-              />
-              <span>{task.label}</span>
-            </label>
+            <ListItem task={task} toggle={toggle} />
           </li>
         ))}
       </ul>
     </div>
+  );
+};
+
+const ListItem: FC<{
+  task: Task;
+  toggle: ChangeEventHandler<HTMLInputElement>;
+}> = ({ task, toggle }) => {
+  return (
+    <label className="flex items-center">
+      <input
+        type="checkbox"
+        checked={task.isDone}
+        value={task.key}
+        onChange={toggle}
+      />
+      <span>{task.label}</span>
+    </label>
   );
 };
 
