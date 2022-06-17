@@ -1,14 +1,21 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { ChangeEventHandler, MouseEventHandler, useState } from "react";
 
 const Home: NextPage = () => {
-  const [text, setText] = useState();
-  const [tasks, setTasks] = useState([]);
-
-  const input = (e) => {
+  type Task = {
+    key: number;
+    label: string;
+    isDone: boolean;
+  };
+  //関数に型をつけるのはgenericsが有効
+  const [text, setText] = useState(""); //初期値を入れてやることで型推論が有効になって定義しなくても型をつけてくれる。
+  const [tasks, setTasks] = useState<Task[]>([]);
+  //eに対して型をつけていく。しかしe: {target:{value:string}}という型の付け方はbad caseで本来この型は知っているから書けるもので型は抽象的にして選択肢を持たせるべき。
+  //メソッドなどに型をつける時は、コードジャンプしてそこで使わている型を使うのが良い
+  const input: ChangeEventHandler<HTMLInputElement> = (e) => {
     setText(e.target.value);
   };
-  const toggle = (e) => {
+  const toggle:ChangeEventHandler<HTMLInputElement> = (e) => {
     setTasks((prevTasks) => {
       return prevTasks.map((task) => {
         if (task.key === Number(e.target.value)) {
@@ -18,7 +25,7 @@ const Home: NextPage = () => {
       });
     });
   };
-  const add = () => {
+  const add: MouseEventHandler<HTMLButtonElement> = () => {
     setTasks((prevTasks) => {
       return [...prevTasks, { key: Math.random(), label: text, isDone: false }];
     });
