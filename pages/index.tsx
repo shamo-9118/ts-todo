@@ -47,7 +47,8 @@ const Home: NextPage = () => {
           className="border border-black flex-shrink-0 px-2"
           onClick={add}
         >
-          追加をしています！
+          追加します
+
         </button>
       </div>
       <ul className="mt-4 space-y-2">
